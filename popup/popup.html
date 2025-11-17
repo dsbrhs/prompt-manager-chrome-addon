@@ -1,6 +1,3 @@
-// =============================
-// popup/popup.html
-// =============================
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -16,5 +13,21 @@
 <ul id="prompt-list"></ul>
 </div>
 <script src="popup.js"></script>
+<div id="editModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>プロンプト編集</h2>
+
+    <label>タイトル</label>
+    <input type="text" id="editTitle" />
+
+    <label>内容</label>
+    <textarea id="editContent"></textarea>
+
+    <div class="modal-buttons">
+      <button id="saveEditBtn" class="btn-primary">保存</button>
+      <button id="cancelEditBtn" class="btn-secondary">キャンセル</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

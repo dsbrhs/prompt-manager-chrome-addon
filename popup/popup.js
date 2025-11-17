@@ -1,19 +1,75 @@
 // =============================
 // popup/popup.js
 // =============================
+document.addEventListener("DOMContentLoaded", () => {
+
 const listEl = document.getElementById("prompt-list");
 const addButton = document.getElementById("add");
 
 
 function render(prompts) {
-    listEl.innerHTML = "";
-    prompts.forEach((p) => {
-        const li = document.createElement("li");
-        li.textContent = p.title;
-    li.onclick = () => insertPrompt(p.content);
+  listEl.innerHTML = "";
+  prompts.forEach((p) => {
+    const li = document.createElement("li");
+
+    // タイトル
+    const titleSpan = document.createElement("span");
+    titleSpan.textContent = p.title;
+    titleSpan.className = "prompt-title";
+    li.appendChild(titleSpan);
+
+    // 挿入ボタン
+    const insertBtn = document.createElement("button");
+    insertBtn.textContent = "挿入";
+    insertBtn.className = "btn-insert";
+    insertBtn.onclick = () => insertPrompt(p.content);
+    li.appendChild(insertBtn);
+
+    // 編集ボタン
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "編集";
+    editBtn.className = "btn-edit";
+    editBtn.onclick = () => openEditModal(p);
+    li.appendChild(editBtn);
+
     listEl.appendChild(li);
-    });
+  });
 }
+
+let currentEditingId = null;
+
+function openEditModal(prompt) {
+  currentEditingId = prompt.id;
+  document.getElementById("editTitle").value = prompt.title;
+  document.getElementById("editContent").value = prompt.content;
+
+  document.getElementById("editModal").classList.remove("hidden");
+}
+
+function closeEditModal() {
+  document.getElementById("editModal").classList.add("hidden");
+  currentEditingId = null;
+}
+
+document.getElementById("cancelEditBtn").onclick = closeEditModal;
+
+document.getElementById("saveEditBtn").onclick = () => {
+  const newTitle = document.getElementById("editTitle").value.trim();
+  const newContent = document.getElementById("editContent").value.trim();
+
+  chrome.storage.sync.get(["prompts"], (result) => {
+    const prompts = result.prompts || [];
+
+    const updated = prompts.map((p) =>
+      p.id === currentEditingId ? { ...p, title: newTitle, content: newContent } : p
+    );
+
+    chrome.storage.sync.set({ prompts: updated }, () => {
+      render(updated);
+      closeEditModal();
+    });
+  });
+};
 
 
 function loadPrompts() {
@@ -82,4 +138,4 @@ function insertPrompt(text) {
       });
     });
   }
-  
+  }); 
