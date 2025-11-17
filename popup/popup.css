@@ -1,0 +1,19 @@
+// =============================
+// popup/popup.css
+// =============================
+#app {
+    width: 250px;
+    padding: 10px;
+}
+ul { padding: 0; }
+li {
+    list-style: none;
+    padding: 6px;
+    background: #eee;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+li:hover {
+    background: #ddd;
+}

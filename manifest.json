@@ -1,0 +1,22 @@
+// =============================
+// manifest.json
+// =============================
+{
+    "manifest_version": 3,
+    "name": "Prompt Manager v0",
+    "version": "0.1.0",
+    "description": "Prototype of a prompt management tool.",
+    "permissions": ["storage", "activeTab", "scripting"],
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://chatgpt.com/*"],
+            "js": ["content/contentScript.js"]
+        }
+    ]
+}
