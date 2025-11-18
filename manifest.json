@@ -1,9 +1,6 @@
-// =============================
-// manifest.json
-// =============================
 {
     "manifest_version": 3,
-    "name": "Prompt Manager v0",
+    "name": "Prompt Manager Google Chrome Extension",
     "version": "0.1.0",
     "description": "Prototype of a prompt management tool.",
     "permissions": ["storage", "activeTab", "scripting"],
@@ -11,11 +8,15 @@
         "default_popup": "popup/popup.html"
     },
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "background.js",
+        "type": "module"
     },
     "content_scripts": [
         {
-            "matches": ["https://chatgpt.com/*"],
+            "matches": [
+                "https://chatgpt.com/*",
+                "https://www.chatgpt.com/*"
+            ],
             "js": ["content/contentScript.js"]
         }
     ]
