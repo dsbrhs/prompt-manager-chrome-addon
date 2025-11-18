@@ -32,6 +32,13 @@ function render(prompts) {
     editBtn.onclick = () => openEditModal(p);
     li.appendChild(editBtn);
 
+    // 削除ボタン
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "✖️";
+    deleteBtn.className = "btn-delete";
+    deleteBtn.onclick = () => deletePrompt(p.id);
+    li.appendChild(deleteBtn);
+
     listEl.appendChild(li);
   });
 }
@@ -80,8 +87,8 @@ function loadPrompts() {
 
 
 addButton.onclick = () => {
-    const title = prompt("Title?");
-    const content = prompt("Content?");
+    const title = prompt("プロンプト名称を登録");
+    const content = prompt("プロンプト内容を登録");
     if (!title || !content) return;
 
     chrome.storage.sync.get("prompts", (data) => {
@@ -138,4 +145,19 @@ function insertPrompt(text) {
       });
     });
   }
+
+  function deletePrompt(id) {
+    if (!confirm("本当に削除しますか？")) return;
+
+    chrome.storage.sync.get(["prompts"], (result) => {
+      const prompts = result.prompts || [];
+
+      const updated = prompts.filter((p) => p.id !== id);
+
+      chrome.storage.sync.set({ prompts: updated }, () => {
+        render(updated);
+      });
+    });
+  }
+
   }); 
