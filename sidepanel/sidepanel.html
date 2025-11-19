@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prompt Manager — Panel</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <header class="sp-header">
+    <h1>Saved Prompts</h1>
+    <button id="refreshBtn" title="リストを更新">⟳</button>
+  </header>
+
+  <main>
+    <input id="search" placeholder="検索（タイトル/内容）" />
+    <div id="prompt-list" class="prompt-list"></div>
+  </main>
+
+  <footer class="sp-footer">
+    <button id="newBtn">＋ 新規</button>
+  </footer>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
