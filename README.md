@@ -1,6 +1,6 @@
 ---
 
-# 📘 Prompt Manager Alpha (V0)
+# 📘 Prompt Manager Chrome Extension
 
 Chrome Extension for managing reusable prompts and inserting them directly into ChatGPT with one click.
 
@@ -8,8 +8,8 @@ Chrome Extension for managing reusable prompts and inserting them directly into 
 
 ## 🚀 Overview
 
-**Prompt Manager Alpha (V0)** は、ChatGPT を頻繁に使うユーザー向けの
-**「プロンプト管理ツール」**です。
+**Prompt Manager Chrome Extension** は、ChatGPT を頻繁に使うユーザー向けの
+「プロンプト管理ツール」です。
 
 * 繰り返し使うプロンプトを保存
 * Popup で一覧表示
@@ -122,8 +122,6 @@ UI 変更が発生した場合は、selectors を更新する必要がありま�
 
 ## 📦 Roadmap (v1 以降)
 
-* プロンプト編集機能
-* プロンプト削除機能
 * タグ / カテゴリ分類
 * サイドパネル UI（より大きな編集画面）
 * カーソル位置への挿入
