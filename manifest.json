@@ -1,34 +1,30 @@
 {
-    "manifest_version": 3,
-    "name": "Prompt Manager Google Chrome Extension",
-    "version": "0.1.0",
-    "description": "Prototype of a prompt management tool.",
-    "permissions": [
-        "storage", 
-        "activeTab", 
-        "scripting",
-        "sidePanel"
-    ],
-    "side_panel": {
-        "default_path": "sidepanel/sidepanel.html"
-    },
-    "action": {
-        "default_popup": "popup/popup.html",
-        "default_title": "Prompt Manager"
-    },
-    "background": {
-        "service_worker": "background.js",
-        "type": "module"
-    },
-    "content_scripts": [
-        {
-            "matches": [
-                "https://chat.openai.com/*",
-                "https://chatgpt.com/*",
-                "https://www.chatgpt.com/*",
-                "https://*.chatgpt.com/*"
-            ],
-            "js": ["content/contentScript.js"]
-        }
-    ]
+  "manifest_version": 3,
+  "name": "Prompt Manager",
+  "version": "1.0.0",
+  "description": "Manage your prompts via a dedicated side panel.",
+  
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "*://*.chatgpt.com/*",
+    "*://chatgpt.com/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+
+  "action": {
+    "default_title": "Open Prompt Manager"
+  }
 }
