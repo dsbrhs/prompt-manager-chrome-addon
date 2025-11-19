@@ -44,12 +44,12 @@ function renderList(prompts){
     el.appendChild(title);
     el.appendChild(snippet);
 
-    // クリックで挿入（現在アクティブなタブ）
+    // 左クリック：挿入
     el.addEventListener('click', () => {
       insertPromptToActiveTab(p.content);
     });
 
-    // 右クリックメニュー風（編集・削除）
+    // 右クリック：編集 / 削除
     el.addEventListener('contextmenu', (ev) => {
       ev.preventDefault();
       showContextMenu(ev.clientX, ev.clientY, idx);
@@ -60,14 +60,20 @@ function renderList(prompts){
 }
 
 function insertPromptToActiveTab(text){
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (!tabs || !tabs[0]) return;
-    chrome.tabs.sendMessage(tabs[0].id, { action: 'insertPrompt', prompt: text });
-  });
+  // background に中継を頼む（sidepanel -> background）
+  chrome.runtime.sendMessage(
+    { action: 'insertPromptBroadcast', prompt: text },
+    (resp) => {
+      if (chrome.runtime.lastError) {
+        console.warn("Sidepanel -> Background 送信エラー:", chrome.runtime.lastError.message);
+      } else {
+        console.log("Sidepanel -> Background 応答:", resp);
+      }
+    }
+  );
 }
 
 function createNewPrompt(){
-  // シンプルに prompt 作成 UI をブラウザ内で開く代替（例: popup の編集画面を流用する等）
   const title = prompt('新しいプロンプトのタイトルを入力');
   if (title === null) return;
   const content = prompt('プロンプト本文を入力');
@@ -89,9 +95,7 @@ function onSearch(e){
   renderList(filtered);
 }
 
-/* シンプルなコンテキストメニュー（編集・削除） */
 function showContextMenu(x, y, index){
-  // 既にメニューがあれば消す
   const existing = document.getElementById('sp-ctxmenu');
   if (existing) existing.remove();
 
@@ -105,8 +109,13 @@ function showContextMenu(x, y, index){
   menu.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
   menu.style.zIndex = 9999;
 
-  const edit = document.createElement('div'); edit.textContent = '編集'; edit.style.padding = '8px';
-  const del  = document.createElement('div'); del.textContent  = '削除';  del.style.padding = '8px';
+  const edit = document.createElement('div');
+  edit.textContent = '編集';
+  edit.style.padding = '8px';
+
+  const del = document.createElement('div');
+  del.textContent = '削除';
+  del.style.padding = '8px';
 
   edit.addEventListener('click', () => {
     menu.remove();
@@ -121,7 +130,6 @@ function showContextMenu(x, y, index){
   menu.appendChild(del);
   document.body.appendChild(menu);
 
-  // クリックどこでもで消す
   const onBodyClick = (e) => {
     if (!menu.contains(e.target)) {
       menu.remove();

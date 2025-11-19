@@ -7,12 +7,15 @@
   "permissions": [
     "sidePanel",
     "storage",
-    "tabs"
+    "tabs",
+    "activeTab",
+    "scripting"
   ],
 
   "host_permissions": [
+    "*://chatgpt.com/*",
     "*://*.chatgpt.com/*",
-    "*://chatgpt.com/*"
+    "*://chat.openai.com/*"
   ],
 
   "background": {
@@ -23,6 +26,18 @@
   "side_panel": {
     "default_path": "sidepanel/sidepanel.html"
   },
+
+   "content_scripts": [
+    {
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://*.chatgpt.com/*",
+        "*://chat.openai.com/*"
+      ],
+      "js": ["content/contentScript.js"],
+      "all_frames": true
+    }
+  ],
 
   "action": {
     "default_title": "Open Prompt Manager"
