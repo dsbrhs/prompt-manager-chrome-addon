@@ -3,10 +3,42 @@
 // =============================
 document.addEventListener('DOMContentLoaded', init);
 
+let currentEditIndex = null;
+
 function init(){
   document.getElementById('refreshBtn').addEventListener('click', loadPrompts);
-  document.getElementById('newBtn').addEventListener('click', createNewPrompt);
+  document.getElementById('newBtn').addEventListener('click', () => openModal());
   document.getElementById('search').addEventListener('input', onSearch);
+  
+  // モーダル関連のイベントリスナー
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const modalCancelBtn = document.getElementById('modal-cancel-btn');
+  const modalSaveBtn = document.getElementById('modal-save-btn');
+  const modal = document.getElementById('prompt-modal');
+  
+  if (!modalCloseBtn || !modalCancelBtn || !modalSaveBtn || !modal) {
+    console.error('モーダル要素が見つかりません');
+    return;
+  }
+  
+  modalCloseBtn.addEventListener('click', closeModal);
+  modalCancelBtn.addEventListener('click', closeModal);
+  modalSaveBtn.addEventListener('click', savePrompt);
+  
+  // モーダル背景クリックで閉じる
+  modal.addEventListener('click', (e) => {
+    if (e.target.id === 'prompt-modal') {
+      closeModal();
+    }
+  });
+  
+  // ESCキーでモーダルを閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) {
+      closeModal();
+    }
+  });
+  
   loadPrompts();
 }
 
@@ -73,17 +105,87 @@ function insertPromptToActiveTab(text){
   );
 }
 
-function createNewPrompt(){
-  const title = prompt('新しいプロンプトのタイトルを入力');
-  if (title === null) return;
-  const content = prompt('プロンプト本文を入力');
-  if (content === null) return;
+function openModal(index = null) {
+  console.log('openModal called with index:', index);
+  currentEditIndex = index;
+  const modal = document.getElementById('prompt-modal');
+  const titleInput = document.getElementById('prompt-title-input');
+  const contentInput = document.getElementById('prompt-content-input');
+  const modalTitle = document.getElementById('modal-title');
+  
+  if (!modal || !titleInput || !contentInput || !modalTitle) {
+    console.error('モーダル要素が見つかりません:', { modal, titleInput, contentInput, modalTitle });
+    return;
+  }
+  
+  console.log('モーダル要素が見つかりました。モーダルを開きます。');
+  
+  if (index !== null) {
+    // 編集モード
+    chrome.storage.sync.get(['prompts'], (data) => {
+      const arr = data.prompts || [];
+      const prompt = arr[index];
+      if (prompt) {
+        titleInput.value = prompt.title || '';
+        contentInput.value = prompt.content || '';
+        modalTitle.textContent = 'プロンプトを編集';
+      }
+      modal.classList.add('show');
+      // 直接スタイルも設定（念のため）
+      modal.style.display = 'flex';
+      console.log('モーダルにshowクラスを追加しました。現在のクラス:', modal.className);
+      console.log('モーダルのスタイル:', window.getComputedStyle(modal).display);
+      // フォーカスをタイトル入力欄に設定
+      setTimeout(() => titleInput.focus(), 100);
+    });
+  } else {
+    // 新規作成モード
+    titleInput.value = '';
+    contentInput.value = '';
+    modalTitle.textContent = '新規プロンプト';
+    modal.classList.add('show');
+    // 直接スタイルも設定（念のため）
+    modal.style.display = 'flex';
+    console.log('モーダルにshowクラスを追加しました。現在のクラス:', modal.className);
+    console.log('モーダルのスタイル:', window.getComputedStyle(modal).display);
+    // フォーカスをタイトル入力欄に設定
+    setTimeout(() => titleInput.focus(), 100);
+  }
+}
 
+function closeModal() {
+  const modal = document.getElementById('prompt-modal');
+  modal.classList.remove('show');
+  modal.style.display = 'none';
+  currentEditIndex = null;
+}
+
+function savePrompt() {
+  const titleInput = document.getElementById('prompt-title-input');
+  const contentInput = document.getElementById('prompt-content-input');
+  
+  const title = titleInput.value.trim();
+  const content = contentInput.value.trim();
+  
+  if (!title && !content) {
+    alert('タイトルまたは内容のいずれかを入力してください。');
+    return;
+  }
+  
   chrome.storage.sync.get(['prompts'], (data) => {
     const arr = data.prompts || [];
-    arr.unshift({ title, content });
+    
+    if (currentEditIndex !== null) {
+      // 編集モード
+      arr[currentEditIndex] = { title, content };
+    } else {
+      // 新規作成モード
+      arr.unshift({ title, content });
+    }
+    
     chrome.storage.sync.set({ prompts: arr }, () => {
       loadPrompts();
+      closeModal();
     });
   });
 }
@@ -140,17 +242,7 @@ function showContextMenu(x, y, index){
 }
 
 function editPrompt(index){
-  chrome.storage.sync.get(['prompts'], (data) => {
-    const arr = data.prompts || [];
-    const p = arr[index];
-    if (!p) return;
-    const newTitle = prompt('タイトル編集', p.title);
-    if (newTitle === null) return;
-    const newContent = prompt('内容編集', p.content);
-    if (newContent === null) return;
-    arr[index] = { title: newTitle, content: newContent };
-    chrome.storage.sync.set({ prompts: arr }, loadPrompts);
-  });
+  openModal(index);
 }
 
 function deletePrompt(index){
