@@ -106,7 +106,6 @@ function insertPromptToActiveTab(text){
 }
 
 function openModal(index = null) {
-  console.log('openModal called with index:', index);
   currentEditIndex = index;
   const modal = document.getElementById('prompt-modal');
   const titleInput = document.getElementById('prompt-title-input');
@@ -117,8 +116,6 @@ function openModal(index = null) {
     console.error('モーダル要素が見つかりません:', { modal, titleInput, contentInput, modalTitle });
     return;
   }
-  
-  console.log('モーダル要素が見つかりました。モーダルを開きます。');
   
   if (index !== null) {
     // 編集モード
@@ -131,10 +128,7 @@ function openModal(index = null) {
         modalTitle.textContent = 'プロンプトを編集';
       }
       modal.classList.add('show');
-      // 直接スタイルも設定（念のため）
       modal.style.display = 'flex';
-      console.log('モーダルにshowクラスを追加しました。現在のクラス:', modal.className);
-      console.log('モーダルのスタイル:', window.getComputedStyle(modal).display);
       // フォーカスをタイトル入力欄に設定
       setTimeout(() => titleInput.focus(), 100);
     });
@@ -144,10 +138,7 @@ function openModal(index = null) {
     contentInput.value = '';
     modalTitle.textContent = '新規プロンプト';
     modal.classList.add('show');
-    // 直接スタイルも設定（念のため）
     modal.style.display = 'flex';
-    console.log('モーダルにshowクラスを追加しました。現在のクラス:', modal.className);
-    console.log('モーダルのスタイル:', window.getComputedStyle(modal).display);
     // フォーカスをタイトル入力欄に設定
     setTimeout(() => titleInput.focus(), 100);
   }
