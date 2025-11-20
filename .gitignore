@@ -1,0 +1,44 @@
+# docsディレクトリ（非公開）
+docs/
+
+# OS関連
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# エディタ関連
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# ログファイル
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 環境変数
+.env
+.env.local
+.env.*.local
+
+# ビルド成果物
+dist/
+build/
+*.zip
+*.crx
+*.pem
+
+# 一時ファイル
+*.tmp
+*.temp
+.cache/
+
