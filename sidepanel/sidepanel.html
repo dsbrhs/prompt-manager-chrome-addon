@@ -14,6 +14,23 @@
       <input id="search" placeholder="検索..." />
     </div>
 
+    <!-- タグ/カテゴリフィルタ -->
+    <div id="filter-bar" class="filter-bar">
+      <div class="filter-section">
+        <span class="filter-label">カテゴリ:</span>
+        <select id="category-filter" class="filter-select">
+          <option value="">すべて</option>
+        </select>
+      </div>
+      <div class="filter-section">
+        <span class="filter-label">タグ:</span>
+        <div id="tag-filters" class="tag-filters">
+          <!-- タグボタンがここに動的に追加されます -->
+        </div>
+      </div>
+      <button id="clear-filters" class="clear-filters-btn">フィルタクリア</button>
+    </div>
+
     <div id="prompt-list" class="prompt-list">
       <!-- JS がここへプロンプト一覧を描画 -->
     </div>
@@ -31,6 +48,15 @@
         <div class="form-group">
           <label for="prompt-title-input">タイトル</label>
           <input type="text" id="prompt-title-input" placeholder="プロンプトのタイトルを入力" />
+        </div>
+        <div class="form-group">
+          <label for="prompt-category-input">カテゴリ</label>
+          <input type="text" id="prompt-category-input" placeholder="カテゴリを入力（例: プログラミング、ライティング）" />
+        </div>
+        <div class="form-group">
+          <label for="prompt-tags-input">タグ</label>
+          <input type="text" id="prompt-tags-input" placeholder="タグをカンマ区切りで入力（例: JavaScript, 初心者, デバッグ）" />
+          <div class="form-hint">カンマまたはEnterキーでタグを追加できます</div>
         </div>
         <div class="form-group">
           <label for="prompt-content-input">内容</label>
